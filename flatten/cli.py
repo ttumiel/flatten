@@ -34,10 +34,12 @@ def main():
 
     # Run flatten_folder
     flattened_str = flatten_folder(folder_path=args.folder, ignores=additional_ignores)
+    total_words = len(flattened_str.split())
 
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(flattened_str)
+        print(f"{total_words} words saved.")
     else:
         pyperclip.copy(flattened_str)
-        print("Copied to clipboard.")
+        print(f"Copied to clipboard ({total_words} words).")
