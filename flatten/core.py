@@ -20,21 +20,21 @@ def flatten_folder(folder_path, ignores=None, include_stats=False):
     base_patterns = ignores or []
     base_pathspec = PathSpec.from_lines("gitwildmatch", base_patterns)
     flat = _walk_and_flatten(folder_path, base_pathspec)
-    
+
     flattened_str = "\n".join(
-        f"{os.path.relpath(path, folder_path)}\n---\n{content}\n---\n"
+        f"{os.path.relpath(path, folder_path)}\n```\n{content}\n```\n"
         for path, content in flat.items()
     )
-    
+
     if include_stats:
         # Create a dictionary mapping relative file paths to token counts
         file_stats = {
-            os.path.relpath(path, folder_path): len(content.split())
+            os.path.relpath(path, folder_path): len(content.encode('utf-8')) // 10
             for path, content in flat.items()
         }
         return flattened_str, file_stats
-    
-    return flattened_str
+
+    return flattened_str, {}
 
 
 def _walk_and_flatten(path, parent_pathspec):

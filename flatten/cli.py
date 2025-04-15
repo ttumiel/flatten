@@ -37,19 +37,13 @@ def main():
             pat.strip() for pat in args.ignore.split(",") if pat.strip()
         ]
 
-    # Run flatten_folder with stats if top-tokens is requested
-    if args.top_tokens:
-        flattened_str, file_stats = flatten_folder(
-            folder_path=args.folder, 
-            ignores=additional_ignores,
-            include_stats=True
-        )
-    else:
-        flattened_str = flatten_folder(
-            folder_path=args.folder, 
-            ignores=additional_ignores
-        )
-    
+    # Run flatten_folder
+    flattened_str, file_stats = flatten_folder(
+        folder_path=args.folder,
+        ignores=additional_ignores,
+        include_stats=args.top_tokens
+    )
+
     total_words = len(flattened_str.split())
 
     # Print top 10 files by token count if requested
@@ -63,7 +57,7 @@ def main():
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:
             f.write(flattened_str)
-        print(f"{total_words} words saved.")
+        print(f"{total_words} tokens saved.")
     else:
         pyperclip.copy(flattened_str)
-        print(f"Copied to clipboard ({total_words} words).")
+        print(f"Copied to clipboard ({total_words} tokens).")
